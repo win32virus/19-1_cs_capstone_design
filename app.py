@@ -17,6 +17,7 @@ def sample_list():
     obj = json.loads(res.text)
     res.close()
     # id_list = []
+    """
     ctx = []
     for task in obj['tasks']:
         # id_list.append(task['id'])
@@ -33,8 +34,8 @@ def sample_list():
             'status': task['status']
                     })
         res.close()
-
-    return render_template('samplelist/index.html', tasks=ctx)
+    """
+    return render_template('samplelist/index.html', tasks=obj['tasks'])
 
 
 @app.route('/report/<int:idx>')
@@ -43,7 +44,7 @@ def report(idx):
     res = requests.get(report_url)
     obj = json.loads(res.text)
     res.close()
-    # print(obj)
+    #print(obj)
     return render_template('analysis/index.html', report=obj)
 
 
