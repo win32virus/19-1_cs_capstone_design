@@ -1,0 +1,72 @@
+{% if report.static.hwp.content %}
+    <h4>HWP Contents</h4>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+        Show contents
+    </button>
+    <!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        {{ report.static.hwp.content }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+<h4>OLE Streams</h4>
+<table class="table table-sm table-striped">
+    <tr>
+        <th>Name</th>
+        <th>sid</th>
+        <th>compressed</th>
+        <th>type_literal</th>
+        <th>size</th>
+        <th>Stream(Hex)</th>
+        <th>Stream(Raw)</th>
+    </tr>
+{% for key, data in report.static.hwp.streams.items() %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ data.meta.sid }}</td>
+        <td>{{ data.meta.compressed }}</td>
+        <td>{{ data.meta.type_literal }}</td>
+        <td>{{ data.meta.size }}</td>
+        <td>{{ data.stream_content|to_hex|truncate(40) }}</td>
+        <td>{{ data.stream_content|truncate(40) }}</td>
+    </tr>
+{% endfor %}
+</table>
+{% for macro in report.static.hwp.macros %}
+    <h4>Macro</h4>
+    <table class="table table-striped">
+        <tr>
+            <th>header</th>
+            <th>src</th>
+            <th>post_src</th>
+            <th>pre_src</th>
+        </tr>
+        <tr>
+            <td><pre>{{ macro.header }}</pre></td>
+            <td><pre>{{ macro.src }}</pre></td>
+            <td><pre>{{ macro.post_src }}</pre></td>
+            <td><pre>{{ macro.pre_src }}</pre></td>
+        </tr>
+    </table>
+{% endfor %}
+{% for eps in report.static.hwp.eps %}
+    <h4>EPS</h4>
+    <table class="table table-sm">
+    <tr>
+        <th>stream Name</th>
+        <th>stream content</th>
+    </tr>
+    <tr>
+        <td class="alert-danger">{{ eps.filename }}</td>
+        <td>{{ eps.code|truncate(1000) }}</td>
+    </tr>
+    </table>
+{% endfor %}

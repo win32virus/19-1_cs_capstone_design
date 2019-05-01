@@ -1,0 +1,7 @@
+<ul class="processes tree" data-tree="init">
+  {% for process in report.behavior.processtree %}
+      {% if process.track %}
+            {% include "analysis/Behavior/partials/_process.html" %}
+      {% endif %}
+  {% endfor %}
+</ul>

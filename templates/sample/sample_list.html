@@ -1,0 +1,58 @@
+{% extends 'base/layout.html' %}
+{% block content %}
+{% if pagination %}
+<nav aria-label="Sample list page">
+    <ul class="pagination justify-content-center">
+        {% if page > 1 %}
+        <li class="page-item">
+        {% else %}
+        <li class="page-item disabled">
+        {% endif %}
+            <a class="page-link" href="{{ url_for('sample_list') }}?page={{ page - 1 }}">Previous</a>
+        </li>
+
+        {%  for i in range(0, ((tasks_count)//10) + 1) %}
+        <li class="page-item" aria-current="page">
+            <a class="page-link" href="{{ url_for('sample_list') }}?page={{ i + 1 }}">{{ i + 1 }}</a>
+        </li>
+        {% endfor %}
+        {% if page < ((tasks_count)//10) + 1 %}
+        <li class="page-item">
+        {% else %}
+        <li class="page-item disabled">
+        {% endif %}
+            <a class="page-link" href="{{ url_for('sample_list') }}?page={{ page + 1 }}">Next</a>
+        </li>
+
+    </ul>
+</nav>
+{% endif %}
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Package</th>
+            <th scope="col">MD5</th>
+            <th scope="col">status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.completed_on }}</td>
+                <td>{{ task.package }}</td>
+                <td>{{ task.sample.md5 }}</td>
+                <td>
+                    <a href="{{ url_for('report', idx=task.id) }}">{{ task.status }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+{% endblock %}

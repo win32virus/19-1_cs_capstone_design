@@ -1,0 +1,27 @@
+<li>
+  <div>
+    <p>
+      <a href="#">
+        {{ process.process_name }}
+      </a>
+      <em>
+          {{ process.command_line }}
+      </em>
+        <span class="pid">{{ process.pid }}</span>
+    </p>
+    {% if process.children %}
+      <a class="fa" data-tree="toggle"></a>
+    {% else %}
+      <span class="fill"></span>
+    {% endif %}
+  </div>
+
+  {% if process.children %}
+    <ul>
+      {% for process in process.children %}
+        {% include "analysis/Behavior/partials/_process.html" %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+</li>

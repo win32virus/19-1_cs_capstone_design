@@ -7,6 +7,8 @@
     {% include "analysis/Static/_office.html" %}
 {% elif "pdf" in report.static %}
     {% include "analysis/Static/_pdf.html" %}
+{% elif 'hwp' in report.static %}
+    {% include "analysis/Static/_hwp.html" %}
 {% else %}
     No static analysis available.
 {% endif %}

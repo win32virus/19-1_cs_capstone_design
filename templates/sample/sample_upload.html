@@ -1,0 +1,10 @@
+{% extends 'base/layout.html' %}
+{% block content %}
+<!doctype html>
+<title>{{ title }}</title>
+    <h1>{{ title }}</h1>
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+    </form>
+{% endblock %}

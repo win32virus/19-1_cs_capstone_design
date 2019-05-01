@@ -110,6 +110,7 @@
             <table class="table table-bordered table-sm table-striped">
             {% for mark in signature.marks %}
                 {% if mark.type == "generic" %}
+
                                 <tr>
                                     {% for key, value in mark.items() %}
                                         {% if key != "type" %}
