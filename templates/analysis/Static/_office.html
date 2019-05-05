@@ -1,67 +1,43 @@
-<style>
-    section#static_analysis pre{
-        background-color: transparent;
-        border: 0 solid #ccc;
-        margin: 0 0 0;
-        padding: 0;
-        display: flex;
-        width: 100%;
-    }
+<h4>OLE Streams</h4>
+<table class="table table-sm table-striped">
+    <tr>
+        <th>Name</th>
+        <th>sid</th>
+        <th>compressed</th>
+        <th>type_literal</th>
+        <th>size</th>
+        <th>Stream(Hex)</th>
+        <th>Stream(Raw)</th>
+    </tr>
+{% for key, data in report.static.office.streams.items() %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ data.meta.sid }}</td>
+        <td>{{ data.meta.compressed }}</td>
+        <td>{{ data.meta.type_literal }}</td>
+        <td>{{ data.meta.size }}</td>
+        <td>{{ data.stream_content|to_hex|truncate(40) }}</td>
+        <td>{{ data.stream_content|truncate(40) }}</td>
+    </tr>
+{% endfor %}
+</table>
 
-    section#static_analysis .panel-body{
-        padding:0;
-    }
-
-    section#static_analysis pre code{
-        padding: 14px;
-        padding-top: 0px;
-        width: 100%;
-        margin: 0;
-        background-color: white;
-        font-size:14px;
-    }
-
-    section#static_analysis .panel-body h4{
-        margin-left:12px;
-        margin-bottom:0px;
-        margin-top:20px;
-    }
-</style>
-
-<section id="static_analysis">
-    {% for office in report.static.office.macros %}
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel" id="accordion">
-                    <div class="panel-default">
-                        <div class="panel-heading">
-                            <label class=accordion-toggle">{{ office.filename }} <small>({{ office.stream }})</small></label>
-                        </div>
-
-                        <div id="options" class="panel-collapse collapse in" style="text-align: left;">
-                            <div class="panel-body">
-                                <div class="col-md-6">
-                                    <h4>Original</h4>
-                                    <hr>
-                                    <pre>
-                                        <code class="vbscript">{{ office.orig_code }}</code>
-                                    </pre>
-                                </div>
-
-
-                                <div class="col-md-6">
-                                    <h4>Deobfuscated</h4>
-                                    <hr>
-                                    <pre>
-                                        <code class="vbscript">{{ office.deobf }}</code>
-                                    </pre>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-</section>
+<h4>Macros</h4>
+<table class="table table-striped">
+<tr>
+    <th>name</th>
+    <th>stream</th>
+    <th>macro code</th>
+</tr>
+{% for office in report.static.office.macros %}
+    <tr>
+        <td>{{ office.filename }}</td>
+        <td>{{ office.stream }}</td>
+        <td>
+            <pre>
+            {{ office.orig_code }}
+            </pre>
+        </td>
+    </tr>
+{% endfor %}
+</table>

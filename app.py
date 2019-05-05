@@ -78,6 +78,8 @@ def sample_new():
 
         if file:
             filename = secure_filename(file.filename)
+            fname, package = os.path.splitext(filename)
+            package = package.lower()[1:]
             save_path = os.path.join(app.config['UPLOAD_DIR'], filename)
             file.save(save_path)
 
@@ -85,7 +87,8 @@ def sample_new():
 
             with open(save_path, 'rb') as f:
                 multipart_file = {"file": (os.path.basename(save_path), f)}
-                res = requests.post(url, files=multipart_file)
+                data = {'package': package}
+                res = requests.post(url, files=multipart_file, data=data)
             res.close()
             return redirect(url_for('sample_list'))
 
