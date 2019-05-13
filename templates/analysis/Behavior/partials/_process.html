@@ -19,7 +19,9 @@
   {% if process.children %}
     <ul>
       {% for process in process.children %}
-        {% include "analysis/Behavior/partials/_process.html" %}
+          {% if process.track %}
+            {% include "analysis/Behavior/partials/_process.html" %}
+          {% endif %}
       {% endfor %}
     </ul>
   {% endif %}

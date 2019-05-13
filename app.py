@@ -78,8 +78,9 @@ def sample_new():
 
         if file:
             filename = secure_filename(file.filename)
-            fname, package = os.path.splitext(filename)
-            package = package.lower()[1:]
+            # fname, package = os.path.splitext(filename)
+            # package = package.lower()[1:]
+            package = request.form.get('package', None)
             save_path = os.path.join(app.config['UPLOAD_DIR'], filename)
             file.save(save_path)
 

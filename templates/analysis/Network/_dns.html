@@ -1,0 +1,30 @@
+<section id="domains">
+    <h4>DNS</h4>
+    {% if report.network.dns %}
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th>Name</th>
+                <th>Response</th>
+            </tr>
+            {% for p in report.network.dns %}
+                <tr>
+                <td>{{p.request}} <a href="https://www.virustotal.com/en/domain/{{p.request}}/information/">[VT]</a>
+                </td>
+                    <td>
+                        {% for a in p.answers %}
+                            {{a.type}} {{a.data}}
+                            {% if a.type == "CNAME" %}
+                            <a href="https://www.virustotal.com/en/domain/{{a.data}}/information/">[VT]</a>
+                            {% else %}
+                            <a href="https://www.virustotal.com/en/ip-address/{{a.data}}/information/">[VT]</a>
+                            {% endif %}
+                            </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No domains contacted.</p>
+    {% endif %}
+</section>

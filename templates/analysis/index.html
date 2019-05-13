@@ -2,22 +2,22 @@
 {% block content %}
 <ul class="nav nav-pills" style="padding-left: 2rem;">
     <li class="nav-item">
-        <a class="nav-link active" href="#overview" data-toggle="tab">Overview</a>
+        <a class="nav-link active" href="#overview" data-toggle="pill">Overview</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#static" data-toggle="tab">Static</a>
+        <a class="nav-link" href="#static" data-toggle="pill">Static</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#behavior" data-toggle="tab">Behavior</a>
+        <a class="nav-link" href="#behavior" data-toggle="pill">Behavior</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#network" data-toggle="tab">Network</a>
+        <a class="nav-link" href="#network" data-toggle="pill">Network</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#droppedfiles" data-toggle="tab">Dropped Files</a>
+        <a class="nav-link" href="#droppedfiles" data-toggle="pill">Dropped Files</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#processdump" data-toggle="tab">Process Dump</a>
+        <a class="nav-link" href="#comments" data-toggle="tab">Comments</a>
     </li>
 </ul>
 
@@ -176,6 +176,6 @@
     {% include 'analysis/Behavior/index.html' %}
     {% include 'analysis/Network/index.html' %}
     {% include 'analysis/DroppedFiles/index.html'%}
-    {% include 'analysis/ProcessDump/index.html' %}
+    {% include 'analysis/Comments/index.html' %}
 </div>
 {% endblock %}

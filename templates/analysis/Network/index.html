@@ -1,3 +1,46 @@
 <div class="tab-pane fade" id="network">
-network
+    <ul class="nav nav-tabs" style="padding-left: 2rem;">
+        <li class="nav-item">
+            <a class="nav-link active" href="#network_hosts_tab" aria-controls="network_hosts_tab" data-toggle="tab">
+                Hosts ({{ report.network.hosts|length }})
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#network_dns_tab" aria-controls="network_dns_tab" data-toggle="tab">
+                DNS ({{ report.network.domains|length }})
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#network_tcp_tab" aria-controls="network_tcp_tab" data-toggle="tab">
+                TCP ({{ report.network.tcp|length }})
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#network_udp_tab" aria-controls="network_udp_tab" data-toggle="tab">
+                UDP ({{ report.network.udp|length }})
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#network_http_tab" aria-controls="network_http_tab" data-toggle="tab">
+                HTTP ({{ report.network.http|length }})
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content" id="network_tab_content">
+        <div class="tab-pane fade show active" id="network_hosts_tab">
+            {% include "analysis/Network/_hosts.html" %}
+        </div>
+        <div class="tab-pane fade" id="network_tcp_tab">
+            {% include "analysis/Network/_tcp.html" %}
+        </div>
+        <div class="tab-pane fade" id="network_udp_tab">
+            {% include "analysis/Network/_udp.html" %}
+        </div>
+        <div class="tab-pane fade" id="network_dns_tab">
+            {% include "analysis/Network/_dns.html" %}
+        </div>
+        <div class="tab-pane fade" id="network_http_tab">
+            {% include "analysis/Network/_http.html" %}
+        </div>
+    </div>
 </div>
