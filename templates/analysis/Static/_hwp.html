@@ -1,25 +1,14 @@
 {% if report.static.hwp.content %}
-    <h4>HWP Contents</h4>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-        Show contents
-    </button>
-    <!-- Modal -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-body">
-          <pre>
+    <h4>HWP Preview</h4>
+    <hr>
+    <div>
+        <pre>
         {{ report.static.hwp.content }}
-          </pre>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+        </pre>
     </div>
-  </div>
-</div>
 {% endif %}
 <h4>OLE Streams</h4>
+<hr>
 <table class="table table-sm table-striped">
     <tr>
         <th>Name</th>
@@ -44,6 +33,7 @@
 </table>
 {% for macro in report.static.hwp.macros %}
     <h4>Macro</h4>
+    <hr>
     <table class="table table-striped">
         <tr>
             <th>header</th>
@@ -61,6 +51,7 @@
 {% endfor %}
 {% for eps in report.static.hwp.eps %}
     <h4>EPS</h4>
+    <hr>
     <table class="table table-sm">
     <tr>
         <th>stream Name</th>
@@ -68,7 +59,7 @@
     </tr>
     <tr>
         <td class="alert-danger">{{ eps.filename }}</td>
-        <td><pre>{{ eps.code }}</pre></td>
+        <td>{{ eps.code|truncate(300) }}</td>
     </tr>
     </table>
 {% endfor %}

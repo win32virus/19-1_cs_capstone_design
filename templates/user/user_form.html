@@ -1,0 +1,38 @@
+{% extends 'base/layout.html' %}
+{% block content %}
+<div class="container">
+<h3>{{ title }}</h3>
+    {% if title == 'Join' %}
+    <form method="post" action="{{ url_for('join') }}">
+    {% elif title == 'Login' %}
+    <form method="post" action="{{ url_for('login') }}">
+    {% endif %}
+        <table>
+            <tr>
+                <td>ID</td>
+                <td>
+                    <input type="text" name="user_id">
+                </td>
+            </tr>
+            <tr>
+                <td>PW</td>
+                <td>
+                    <input type="password" name="user_pw">
+                </td>
+            </tr>
+        </table>
+        <tr>
+            <td>
+                <input class="btn btn-outline-dark" type="submit"
+                {% if title == 'Join' %}
+                       value="Join">
+                {% elif title == 'Login' %}
+                       value="Login">
+                {% endif %}
+            </td>
+        </tr>
+
+    </form>
+
+    </div>
+{% endblock %}

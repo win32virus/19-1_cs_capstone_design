@@ -1,3 +1,28 @@
 <div class="tab-pane fade" id="comments">
-    comments
+<div class="container">
+    <h4>Comments</h4><br />
+<form class="form-horizontal" role="form" method="post" action="/comment/{{ report.info.id }}">
+<div class="row">
+  <div class="form group col-lg-10">
+      <textarea class="form-control" rows="7" name="content" placeholder="Add comment ..."></textarea>
+      <div style="margin-top: 5px;">
+        <button class="btn btn-primary pull-right" type="submit">Submit</button>
+      </div>
+  </div>
+</div>
+</form>
+<hr>
+<table class="table table-striped table-sm">
+    <tr>
+        <th>Author</th>
+        <th>Comment</th>
+    </tr>
+    {% for comment in comments %}
+        <tr>
+            <td>{{ comment.user.user_id }}</td>
+            <td>{{ comment.content }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</div>
 </div>

@@ -9,6 +9,7 @@
      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <a class="navbar-brand" href="/">Team 3</a>
          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+         {% if session.user_idx %}
              <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('sample_list') }}">Sample List</a>
@@ -23,13 +24,29 @@
                 {% block navbar %}
                 {% endblock %}
              </ul>
+         {% endif %}
 
             <ul class="navbar-nav ml-auto">
+        {% if session.user_idx %}
+            <li class="nav-item">
+                <a class="nav-link">Hello, {{ session.user_id }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('join') }}">Join</a>
+            </li>
+        {% endif %}
             </ul>
         </div>
     </nav>
     <br>
-     <div class="container-fluid">
+     <div class="container">
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
