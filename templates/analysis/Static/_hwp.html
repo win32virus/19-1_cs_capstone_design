@@ -1,3 +1,18 @@
+{% for eps in report.static.hwp.eps %}
+    <h4>EPS</h4>
+    <hr>
+    <table class="table table-sm">
+    <tr>
+        <th>stream Name</th>
+        <th>stream content</th>
+    </tr>
+    <tr>
+        <td class="alert-danger">{{ eps.filename }}</td>
+        <td>{{ eps.code|truncate(300) }}</td>
+    </tr>
+    </table>
+{% endfor %}
+
 {% if report.static.hwp.content %}
     <h4>HWP Preview</h4>
     <hr>
@@ -47,19 +62,5 @@
             <td><pre>{{ macro.post_src }}</pre></td>
             <td><pre>{{ macro.pre_src }}</pre></td>
         </tr>
-    </table>
-{% endfor %}
-{% for eps in report.static.hwp.eps %}
-    <h4>EPS</h4>
-    <hr>
-    <table class="table table-sm">
-    <tr>
-        <th>stream Name</th>
-        <th>stream content</th>
-    </tr>
-    <tr>
-        <td class="alert-danger">{{ eps.filename }}</td>
-        <td>{{ eps.code|truncate(300) }}</td>
-    </tr>
     </table>
 {% endfor %}

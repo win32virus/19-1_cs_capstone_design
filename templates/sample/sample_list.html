@@ -50,7 +50,11 @@
                 <td>{{ task.package }}</td>
                 <td>{{ task.sample.md5 }}</td>
                 <td>
-                    <a href="{{ url_for('report', idx=task.id) }}">{{ task.status }}</a>
+                    {% if task.status == 'reported' %}
+                        <a href="{{ url_for('report', idx=task.id) }}">{{ task.status }}</a>
+                    {% else %}
+                        {{ task.status }}
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
