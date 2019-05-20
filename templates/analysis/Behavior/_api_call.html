@@ -1,0 +1,31 @@
+<td>
+  <p>{{call.api}}</p>
+  <time>{{call.time}}</time>
+</td>
+<td>
+  {% for key, value in call.arguments.items() %}
+      {{ key }} : {{ value }}<br>
+  {% endfor %}
+</td>
+<td>
+    {% if call.status == true %}
+        success
+    {% elif call.status == false %}
+        failed
+    {% elif call.status %}
+        {{ call.status }}
+    {% endif %}
+</td>
+<td><span class="mono">{{call.return_value}}</span></td>
+<td>
+    {% if call.repeated %}
+        {{call.repeated}}
+        {% if call.repeated > 1 %}
+            times
+        {% else %}
+            time
+        {% endif %}
+    {% else %}
+        0
+    {% endif %}
+</td>

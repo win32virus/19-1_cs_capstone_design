@@ -134,43 +134,18 @@
 
 <section>
     <div class="container-fluid">
-
-    </div>
-</section>
-
-<hr>
-
-<section>
-    <div class="container-fluid">
         <h4>Screenshots</h4>
     </div>
+    <div>
+    {% for screenshot in screenshots %}
+        <a class="example-image-link" href="{{ screenshot.name }}" data-lightbox="example-set">
+            <img class="example-image" src="{{ screenshot.name }}_small" alt=""/>
+        </a>
+    {% endfor %}
+    </div>
 </section>
 
 <hr>
-
-<section>
-    <div class="row">
-        <div class="col-sm-6" style="padding-left: 2rem;">
-            <h4>Host</h4>
-            <table class="table table-striped table-bordered">
-                <tr>
-                    <th>Direct</th>
-                    <th>IP</th>
-                    <th>Host</th>
-                </tr>
-            </table>
-        </div>
-        <div class="col-sm-6" style="padding-right: 2rem;">
-            <h4>DNS</h4>
-            <table class="table table-striped table-bordered">
-                <th>Name</th>
-                <th>Response</th>
-                <th>Post-analysis lookup</th>
-            </table>
-
-        </div>
-    </div>
-</section>
 </div>
     {% include 'analysis/Static/index.html' %}
     {% include 'analysis/Behavior/index.html' %}

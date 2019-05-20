@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, url_for, redirect, flash, request
+from flask import Flask, render_template, session, url_for, redirect, flash, request, make_response
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -105,24 +105,97 @@ def report(idx):
         return redirect(url_for('index'))
 
     # cache
-    json_path = os.path.join(app.config['JSON_DIR'], '{0}.json'.format(idx))
-    if json_path and os.path.exists(json_path) is True:
-        with open(json_path, "r") as f:
-            obj = json.loads(f.read())
+    json_path = os.path.join(app.config['JSON_DIR'], '{0}'.format(idx))
+    if json_path and os.path.exists(json_path) is False:
+        os.mkdir(json_path, 0777)
+    report_path = os.path.join(json_path, '{0}.json'.format(idx))
+
+    if report_path and os.path.exists(report_path) is True:
+        with open(report_path, "r") as f:
+            report_obj = json.loads(f.read())
     else:
         report_url = "http://{0}/tasks/report/{1}".format(app.config['CUCKOO_API_HOST'], idx)
         res = requests.get(report_url)
-        obj = json.loads(res.text)
+        report_obj = json.loads(res.text)
+        behavior_obj = report_obj.get('behavior', [])
+        behavior_path = os.path.join(json_path, '{0}_behavior.json'.format(idx))
+        static_obj = report_obj.get('static', [])
+        static_path = os.path.join(json_path, '{0}_static.json'.format(idx))
         res.close()
-        with open(json_path, "w") as f:
-            f.write(json.dumps(obj))
-    # print(obj)
-    """
-    for key, data in obj['static']['hwp']['streams'].items():
-        print(data['meta'])
-    """
+        with open(report_path, "w") as f:
+            f.write(json.dumps(report_obj))
+        with open(behavior_path, "w") as f:
+            f.write(json.dumps(behavior_obj))
+        with open(static_path, "w") as f:
+            f.write(json.dumps(static_obj))
+
+    screenshots = report_obj.get('screenshots', [])
+    screenshot_obj = []
+    for screenshot in screenshots:
+        name = os.path.split(screenshot['path'])[-1][:-4]
+        screenshot_url = "http://{0}/tasks/screenshots/{1}/{2}".format(app.config['CUCKOO_API_HOST'], idx, name)
+        obj = {'name': screenshot_url}
+        screenshot_obj.append(obj)
     comments = Comment.query.filter_by(task_id=idx)
-    return render_template('analysis/index.html', report=obj, comments=comments)
+    screenshot_obj.sort()
+    return render_template('analysis/index.html', report=report_obj, comments=comments, screenshots=screenshot_obj)
+
+
+@app.route('/analysis/chunk/<int:idx>/<int:pid>/<int:page>')
+def chunk(idx, pid, page):
+    """
+    if 'user_idx' not in session:
+        obj = {'result': -1, 'msg': 'Session Error'}
+        response = make_response(json.dumps(obj), 401)
+        response.headers["Content-Type"] = "application/json"
+        return response
+    """
+    pid = int(pid)
+    page = int(page)
+    json_path = os.path.join(app.config['JSON_DIR'], '{0}'.format(idx))
+    if json_path and os.path.exists(json_path) is False:
+        obj = {'result': -1, 'msg': 'Report doesn\'t exist'}
+        response = make_response(json.dumps(obj), 500)
+        response.headers["Content-Type"] = "application/json"
+        return response
+
+    behavior_path = os.path.join(json_path, '{0}_behavior.json'.format(idx))
+
+    if behavior_path and os.path.exists(behavior_path) is True:
+        with open(behavior_path, "r") as f:
+            behavior_obj = json.loads(f.read())
+
+        behavior_obj = behavior_obj.get('processes', None)
+        if behavior_obj is None:
+            obj = {'result': -1, 'msg': 'No processes of Behavior'}
+            response = make_response(json.dumps(obj))
+            response.headers["Content-Type"] = "application/json"
+            return response
+
+        process = None
+        for pdict in behavior_obj:
+            if pdict['pid'] == pid:
+                process = pdict
+
+        if not process:
+            obj = {'result': -1, 'msg': 'pid doesn\'t match'}
+            response = make_response(json.dumps(obj))
+            response.headers["Content-Type"] = "application/json"
+            return response
+
+        if page >= 0 and page < len(process["calls"]):
+            chunk = dict(calls=process["calls"][(page-1)*10:page*10])
+            for idx, call in enumerate(chunk["calls"]):
+                call["id"] = (page-1) * 10 + idx
+        else:
+            chunk = dict(calls=[])
+        obj = chunk
+    else:
+        obj = {'result': -1, 'msg': 'Behavior element of Report doesn\'t exist'}
+        response = make_response(json.dumps(obj))
+        response.headers["Content-Type"] = "application/json"
+        return response
+    return render_template('analysis/Behavior/_chunk.html', chunk=obj)
 
 
 @app.route('/sample/new', methods=['GET', 'POST'])

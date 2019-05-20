@@ -1,9 +1,13 @@
 <div class="tab-pane fade" id="behavior">
     {% if report.behavior %}
-        <div class="row">
-              {% include "analysis/Behavior/partials/_tree.html" %}
-        </div>
-
+        {% if report.behavior.processtree %}
+            <h4>Process Tree</h4>
+            {% include "analysis/Behavior/partials/_tree.html" %}
+            <hr>
+        {% endif %}
+        {% if report.behavior.processes%}
+            <h4>Processes</h4>
+            {% include "analysis/Behavior/_processes.html" %}
+        {% endif %}
     {% endif %}
-
 </div>
