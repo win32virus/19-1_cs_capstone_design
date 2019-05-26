@@ -56,6 +56,14 @@ def to_hex(text):
     return result
 
 
+@app.template_filter()
+def find_exec(text):
+    lines = text.split('\n')
+    for line in lines:
+        if line.find('EXEC') > -1:
+            return line
+    return 'No Exec line'
+
 @app.route('/')
 def index():
     if 'user_idx' in session:
@@ -143,13 +151,13 @@ def report(idx):
 
 @app.route('/analysis/chunk/<int:idx>/<int:pid>/<int:page>')
 def chunk(idx, pid, page):
-    """
+
     if 'user_idx' not in session:
         obj = {'result': -1, 'msg': 'Session Error'}
         response = make_response(json.dumps(obj), 401)
         response.headers["Content-Type"] = "application/json"
         return response
-    """
+
     pid = int(pid)
     page = int(page)
     json_path = os.path.join(app.config['JSON_DIR'], '{0}'.format(idx))
@@ -248,6 +256,73 @@ def comment(idx):
     else:
         flash('content is not specified')
         return redirect(url_for('report', idx=idx))
+
+
+@app.route('/download/<int:idx>/<string:key>/<int:sid>', methods=['GET'])
+def stream_download(idx, key, sid):
+    if 'user_idx' not in session:
+        obj = {'result': -1, 'msg': 'Session Error'}
+        response = make_response(json.dumps(obj), 401)
+        response.headers["Content-Type"] = "application/json"
+        return response
+
+    idx = int(idx)
+    json_path = os.path.join(app.config['JSON_DIR'], '{0}'.format(idx))
+    if json_path and os.path.exists(json_path) is False:
+        obj = {'result': -1, 'msg': 'Report doesn\'t exist'}
+        response = make_response(json.dumps(obj), 500)
+        response.headers["Content-Type"] = "application/json"
+        return response
+
+    static_path = os.path.join(json_path, '{0}_static.json'.format(idx))
+
+    static_obj = {}
+    if static_path and os.path.exists(static_path) is True:
+        with open(static_path, "r") as f:
+            static_obj = json.loads(f.read())
+    else:
+        obj = {'result': -1, 'msg': 'Static json doesn\'t exist'}
+        response = make_response(json.dumps(obj), 500)
+        response.headers["Content-Type"] = "application/json"
+        return response
+
+    element = static_obj.get(key, None)
+    if element is None:
+        obj = {'result': -1, 'msg': 'key is not existed'}
+        response = make_response(json.dumps(obj), 500)
+        response.headers["Content-Type"] = "application/json"
+        return response
+    else:
+        stream_obj = None
+        if element.get('streams', None) is None:
+            obj = {'result': -1, 'msg': 'streams aren\'t existed'}
+            response = make_response(json.dumps(obj), 500)
+            response.headers["Content-Type"] = "application/json"
+            return response
+
+        for key, data in element['streams'].items():
+            if data['meta']['sid'] == sid:
+                stream_obj = data
+                break
+
+        if stream_obj is None:
+            obj = {'result': -1, 'msg': 'Stream is not existed'}
+            response = make_response(json.dumps(obj), 500)
+            response.headers["Content-type"] = "application/json"
+            return response
+
+        stream_content = stream_obj.get('stream_content', None)
+
+        if stream_content is None:
+            obj = {'result': -1, 'msg': 'Stream content is not existed'}
+            response = make_response(json.dumps(obj), 500)
+            response.headers["Content-type"] = "application/json"
+            return response
+        stream_name = stream_obj['meta']['name']
+        response = make_response(stream_content)
+        response.headers["Content-Type"] = "application/octet-stream"
+        response.headers["Content-Disposition"] = "attachment; filename="+os.path.split(stream_name)[-1]
+        return response
 
 
 @app.route('/user/join', methods=['GET', 'POST'])

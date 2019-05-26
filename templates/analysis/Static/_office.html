@@ -8,6 +8,7 @@
         <th>size</th>
         <th>Stream(Hex)</th>
         <th>Stream(Raw)</th>
+        <th>download</th>
     </tr>
 {% for key, data in report.static.office.streams.items() %}
     <tr>
@@ -18,6 +19,11 @@
         <td>{{ data.meta.size }}</td>
         <td>{{ data.stream_content|to_hex|truncate(40) }}</td>
         <td>{{ data.stream_content|truncate(40) }}</td>
+        <td>
+            <a href="{{ url_for('stream_download', idx=report.info.id, key='office', sid=data.meta.sid) }}">
+                download
+            </a>
+        </td>
     </tr>
 {% endfor %}
 </table>
@@ -34,9 +40,21 @@
         <td>{{ office.filename }}</td>
         <td>{{ office.stream }}</td>
         <td>
-            <pre>
-            {{ office.orig_code }}
-            </pre>
+            {% if office.deobf == 'xlm_macro.txt' %}
+                {% if 'EXEC' in office.orig_code %}
+                    <pre class="alert alert-danger">
+                        {{ office.orig_code|find_exec }}
+                    </pre>
+                {% else %}
+                    <pre class="alert alert-primary">
+                        {{ office.orig_code|find_exec }}
+                    </pre>
+                {% endif %}
+            {% else %}
+                <pre>
+                {{ office.orig_code }}
+                </pre>
+            {% endif %}
         </td>
     </tr>
 {% endfor %}

@@ -33,6 +33,7 @@
         <th>size</th>
         <th>Stream(Hex)</th>
         <th>Stream(Raw)</th>
+        <th>download</th>
     </tr>
 {% for key, data in report.static.hwp.streams.items() %}
     <tr>
@@ -43,6 +44,9 @@
         <td>{{ data.meta.size }}</td>
         <td>{{ data.stream_content|to_hex|truncate(40) }}</td>
         <td>{{ data.stream_content|truncate(40) }}</td>
+        <td>
+            <a href="{{ url_for('stream_download', idx=report.info.id, key='hwp', sid=data.meta.sid) }}">download</a>
+        </td>
     </tr>
 {% endfor %}
 </table>
