@@ -42,9 +42,9 @@
         <td>
             {% if office.deobf == 'xlm_macro.txt' %}
                 {% if 'EXEC' in office.orig_code %}
-                    <pre class="alert alert-danger">
+                    <p class="alert alert-danger">
                         {{ office.orig_code|find_exec }}
-                    </pre>
+                    </p>
                 {% else %}
                     <p class="alert alert-primary">
                         {{ office.orig_code|find_exec }}

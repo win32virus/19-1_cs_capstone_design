@@ -61,7 +61,7 @@ def find_exec(text):
     lines = text.split('\n')
     for line in lines:
         if line.find('EXEC') > -1:
-            line = line.split('ptgStr ')[1].split('\""')[1].split('\"')[0]
+            line = line.split('ptgStr ')[1].split('\"')[1].split('\"')[0]
             return line
     return 'No Exec line'
 
